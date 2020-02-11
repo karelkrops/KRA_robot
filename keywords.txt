@@ -1,4 +1,19 @@
+
+
+#######################################
+# Syntax Coloring Map For KRA_robot
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
 Button	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
 getStatus	KEYWORD2
 getClick	KEYWORD2
 KRA_Timer	KEYWORD1
@@ -13,3 +28,11 @@ xTaskCreate	KEYWORD2
 vTaskDelay	KEYWORD2
 vTaskDelayUntil	KEYWORD2
 vTaskDelete	KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
