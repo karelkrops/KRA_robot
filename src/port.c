@@ -41,8 +41,7 @@
 /* Start tasks with interrupts enabled. */
 #define portFLAGS_INT_ENABLED           ( (StackType_t) 0x80 )
 
-#define    portSCHEDULER_ISR               TIMER1_OVF_vect
-//#define    portSCHEDULER_ISR WDT_vect 
+#define    portSCHEDULER_ISR               WDT_vect
 
 /*-----------------------------------------------------------*/
 
@@ -497,10 +496,10 @@ void vPortYieldFromTick( void )
 void prvSetupTimerInterrupt( void )
 {
     //reset watchdog
- //   wdt_reset();
+    wdt_reset();
 
     //set up WDT Interrupt (rather than the WDT Reset).
- //   wdt_interrupt_enable( portUSE_WDTO );
+    wdt_interrupt_enable( portUSE_WDTO );
 }
 
 /*-----------------------------------------------------------*/
