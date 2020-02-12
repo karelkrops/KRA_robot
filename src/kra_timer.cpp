@@ -36,6 +36,12 @@ bool KRA_Timer::isFinish() {
   return false;
 }
 
+
+bool KRA_Timer::stopTimer() {
+  timeStartTimer = 0;
+  return true;
+}
+
 bool KRA_Timer::isFinishAndRestart() {
   if (isFinish()) {
     startTimer();
