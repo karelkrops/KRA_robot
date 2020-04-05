@@ -1,9 +1,11 @@
 #include "kra_freertos_sablona.h"
 #include <Arduino.h>
-#include <semphr.h> // add the FreeRTOS functions for Semaphores (or Flags).
 
+#ifdef RTOS_ON
+//#include "semphr.h" // add the FreeRTOS functions for Semaphores (or Flags).
+#endif //RTOS_ON
 
-FreeRtosSablona::FreeRtosSablona(const bool startTaskTmp):startTask(startTaskTmp)
+FreeRtosSablona::FreeRtosSablona(const bool startTaskTmp): startTask(startTaskTmp)
 {
   static char taskNumberCountInterni = 'a';
   char taskName[5] = "Ta_";
@@ -19,7 +21,7 @@ FreeRtosSablona::FreeRtosSablona(const bool startTaskTmp):startTask(startTaskTmp
   taskNumberCountInterni++;
 }
 
-FreeRtosSablona::FreeRtosSablona(const bool startTaskTmp, unsigned portSHORT _port, UBaseType_t _priority, const char *_name):startTask(startTaskTmp)
+FreeRtosSablona::FreeRtosSablona(const bool startTaskTmp, unsigned int _port, int _priority, const char *_name): startTask(startTaskTmp)
 {
   if (0) {
     //  Serial.begin(115200);
@@ -29,35 +31,39 @@ FreeRtosSablona::FreeRtosSablona(const bool startTaskTmp, unsigned portSHORT _po
   startInterni(_port, _priority, _name);
 }
 
-void FreeRtosSablona::startInterni(unsigned portSHORT _port, UBaseType_t _priority, const char *_name)
+void FreeRtosSablona::startInterni(unsigned int _port, int _priority, const char *_name)
 {
   if (0) {
     //  Serial.begin(115200);
     while (!Serial) {};
-    //  Serial.print("xTaskCreate(FreeRtosSablona::task,\"");
-    //  Serial.print((const portCHAR *)_name);
-    //  Serial.print("\",");
-    //  Serial.print(_port);
-    //  Serial.print(",");
-    //  Serial.print((int)this);
-    //  Serial.print(',');
-    //  Serial.print(_priority);
-    //  Serial.print(',');
-    //  Serial.print((int)&this->taskHandle);
-    //  Serial.print(")");
+    Serial.print("xTaskCreate(FreeRtosSablona::task,\"");
+    Serial.print(_name);
+    //      Serial.print((const portCHAR *)_name);
+    Serial.print("\",");
+    Serial.print(_port);
+    Serial.print(",");
+    Serial.print((int)this);
+    Serial.print(',');
+    Serial.print(_priority);
+    //      Serial.print(',');
+    //      Serial.print((int)&this->taskHandle);
+    Serial.print(")");
   }
   if (startTask) {
+#ifdef  RTOS_ON
     xTaskCreate(
       FreeRtosSablona::task, (const portCHAR *)_name // name
       ,
-      _port //
+      _port // velikost alokované paměti
       ,
       this // poineter instance
       ,
       _priority // Priority
       ,
       &this->taskHandle);
+    configASSERT( this->taskHandle );
     //    Serial.println("Task vytvořen");
+#endif // RTOS_ON
   }
 }
 
@@ -71,15 +77,18 @@ FreeRtosSablona::~FreeRtosSablona()
 
 void FreeRtosSablona::task(void *pvParameters)
 {
+  if(0)Serial.print((int)pvParameters);
   Serial.println("spoustim task.");
   delay(100);
-  FreeRtosSablona *p = static_cast<FreeRtosSablona *>(pvParameters);
   Serial.println("spousten task.");
   delay(100);
-  for (;;) {
-    p->start();
-  }
+#ifdef RTOS_ON
+  FreeRtosSablona *p = static_cast<FreeRtosSablona *>(pvParameters);
+  //  for (;;) {
+  p->start();
+  //  }
   vTaskDelete(NULL);
+#endif // RTOS_ON
 }
 
 void FreeRtosSablona::start()
@@ -91,9 +100,13 @@ void FreeRtosSablona::start()
     /* code */
     Serial.print("FreeRtosSablona::start() ");
     Serial.println(i++);
+#ifdef RTOS_ON
     vTaskDelay(50);
+#endif // RTOS_ON
   }
+#ifdef RTOS_ON
   vTaskDelete(NULL);
+#endif // RTOS_ON
 }
 
 /*----------------- Tasks  ---------------*/
@@ -117,7 +130,7 @@ TestTask1::TestTask1() : FreeRtosSablona(true)
 #endif
 
 };
-TestTask1::TestTask1(unsigned portSHORT _port, UBaseType_t _priority, const char *_name) : FreeRtosSablona(true, _port, _priority, _name)
+TestTask1::TestTask1(unsigned int _port, int _priority, const char *_name) : FreeRtosSablona(true, _port, _priority, _name)
 {
   Serial.begin(115200);
   while (!Serial) {};
@@ -149,7 +162,8 @@ void TestTask1::start()
     //    Serial.print((int)xx);
 
     Serial.println(".");
-
+#ifdef RTOS_ON
     vTaskDelay(800 / portTICK_PERIOD_MS);
+#endif // RTOS_ON
   }
 }

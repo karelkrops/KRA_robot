@@ -8,7 +8,8 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Button	KEYWORD1
+KRA_Button	KEYWORD1
+KRA_Timer	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -16,16 +17,17 @@ Button	KEYWORD1
 
 getStatus	KEYWORD2
 getClick	KEYWORD2
-KRA_Timer	KEYWORD1
 startTimer	KEYWORD2
 stopTimer	KEYWORD2
+isOnTime	KEYWORD2
 isFinish	KEYWORD2
-isFinishAndRestar	KEYWORD2
+isFinishAndRestart	KEYWORD2
 setTimer	KEYWORD2
 addTimer	KEYWORD2
 
 xTaskCreate	KEYWORD2
 vTaskDelay	KEYWORD2
+taskDelay	KEYWORD2
 vTaskDelayUntil	KEYWORD2
 vTaskDelete	KEYWORD2
 

@@ -2,7 +2,7 @@
 #include <Arduino.h>
 
 KRA_Timer::KRA_Timer(): timeStartTimer(0), timer(0) {
-
+  stopTimer();
 }
 KRA_Timer::KRA_Timer(unsigned long newTimer) {
   setTimer(newTimer);
@@ -14,9 +14,10 @@ KRA_Timer::~KRA_Timer() {
 }
 
 bool KRA_Timer::startTimer() {
+  isFinish();
   timeStartTimer = millis();
   if (!timeStartTimer) timeStartTimer = 1;
-  actualTimer = timer;
+  isModeFinish=false;
   return true;
 }
 
@@ -27,18 +28,36 @@ bool KRA_Timer::setTimer(unsigned long newTimer) {
 }
 
 bool KRA_Timer::isFinish() {
-  if (timer) {
+  if (timeStartTimer) {
     if ( (timeStartTimer + actualTimer) - millis() > 0xFFFFEFFFU) {
-      timeStartTimer = 0;
+      stopTimer();
       return true;
     }
+  }
+  if(isModeFinish){
+    stopTimer();
+    return true;
   }
   return false;
 }
 
-
+bool KRA_Timer::isOnTime(){
+  if (timeStartTimer) {
+    if ( (timeStartTimer + actualTimer) - millis() <= actualTimer) {
+      isModeFinish=false;
+      return true;
+    } else {
+      isModeFinish=true;
+      timeStartTimer = 0;
+      return false;
+    }
+  }
+  return false;
+}
 bool KRA_Timer::stopTimer() {
   timeStartTimer = 0;
+  isModeFinish=false;
+  actualTimer = timer; // nastavení aktualizování časovače
   return true;
 }
 

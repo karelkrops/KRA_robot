@@ -4,14 +4,27 @@
 #ifndef KRA_FREERTOS_SABLONA_H
 #define KRA_FREERTOS_SABLONA_H
 
-#include "Arduino_FreeRTOS.h" // FreeRTOS
-#include "semphr.h"           // add the FreeRTOS functions for Semaphores (or Flags).
+//#define RTOS_ON
+
+#ifdef RTOS_ON
+
+#ifdef __AVR__
+#include <Arduino_FreeRTOS.h> // FreeRTOS for AVR
+#include <semphr.h>           // add the FreeRTOS functions for Semaphores (or Flags).
+#define AVR_RTOS
+#endif // __AVR__
+
+#ifdef __STM32__
+#include <STM32FreeRTOS.h>
+#endif // __STM32__
+
+#endif // RTOS_ON
 
 /**
    autor Karel Kropš
    pro Kroužek robotiky a automatizace Písek (KRA)
-   verze: 1.0.1
-   datum verze: 11.2.2020
+   verze: 1.0.2
+   datum verze: 14.2.2020
 
 */
 
@@ -50,24 +63,26 @@
    https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5:-Library-specification
 
 */
-
+#ifdef RTOS_ON
 #define FREERTOS_SABLONA_SEMAFOR
+#endif //RTOS_ON
 
 class FreeRtosSablona
 {
   protected:
   private:
-    void startInterni(unsigned portSHORT _port, UBaseType_t _priority, const char *_name);
+    void startInterni(unsigned int _port, int _priority, const char *_name);
     static void task(void *pvParameters);
     /* data */
   public:
     const bool startTask;
-    TaskHandle_t taskHandle;
     FreeRtosSablona(const bool startTask);
-    FreeRtosSablona(const bool startTask, unsigned portSHORT _port, UBaseType_t _priority, const char *_name);
+    FreeRtosSablona(const bool startTask, unsigned int _port, int _priority, const char *_name);
     virtual ~FreeRtosSablona();
     virtual void start();
-
+#ifdef RTOS_ON
+    TaskHandle_t taskHandle;
+#endif // RTOS_ON
 };
 
 /*----------------- Tasks  ---------------*/
@@ -76,7 +91,7 @@ class TestTask1 : public FreeRtosSablona
 {
   public:
     TestTask1();
-    TestTask1(unsigned portSHORT _port, UBaseType_t _priority, const char *_name);
+    TestTask1(unsigned int _port, int _priority, const char *_name);
     ~TestTask1() {};
     virtual void start();
 

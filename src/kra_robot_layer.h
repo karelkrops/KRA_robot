@@ -4,12 +4,16 @@
 /**
    Autor: Karel Kropš
    pro Kroužek robotiky a automatizace Písek (KRA)
-   verze: 1.0.1
-   datum verze: 11.2.2020
+   verze: 1.0.5
+   datum verze: 05.4.2020
 
-   třída je nadstavbou třídy FreeRtosSablona, která umožňuje každé instanci běžet v samostatném procesorovém vládně.
    Tato třída zavádí statickou vrstvu, která konsoliduje data ze všech spuštěných instancí a rozhoduje o platnosti získaných dat.
    Další vlastností je, že jednotlivé instance dostávají spětnou vazu v případě, že se jejich data výrazně liší od těch momentálně považovaných za platná.
+
+**********************  FreeRTOS ******Alpha verze - předpříprava ************************
+*  FreeRTOS zatím není implemetováno a to hlavně z důvodu přenositelnosti na různé platformy
+*
+   třída je nadstavbou třídy FreeRtosSablona, která umožňuje každé instanci běžet v samostatném procesorovém vládně.
 
    Startovací procedura vlákna:
   virtual void start(){
@@ -17,6 +21,7 @@
     vTaskDelay(1000 / portTICK_PERIOD_MS); // po dělení jde o čas v milisekundách.
   }
   };
+  ********************  end FreeRTOS ***************************
 */
 
 //#include <KRA_robot.h>
@@ -63,7 +68,13 @@ class RobotLayer
     RobotLayer* nextLayer(); // zatím není využíváno
     RobotLayer* isExistNextLayer(); // zatím není využíváno
     int aktuelLayer; // asi nemá využití
+    static bool semaphoreTake();
+    static bool semaphoreGive();
+    static bool taskDelay(int milliSecond);
+    bool taskDelete();
+#ifdef RTOS_ON
     static SemaphoreHandle_t xSemaphoreSetterOrGetter;
+#endif // RTOS_ON
   private:
 };
 

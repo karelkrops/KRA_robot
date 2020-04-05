@@ -1,0 +1,15 @@
+{
+    "name": "KRA_robot",
+    "version": "1.0.5",
+    "keywords": "KRA, robot, timer, button, PID, average, robot_layer",
+    "description": "podpurne tridy pro programovani robotu na krouzku robotizace a automatizace",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/karelkrops/KRA_ArduinoLibraries/tree/master/KRA_robot"
+    },
+    "frameworks": "arduino",
+    "platforms": "ststm32, ARM",
+    "build": {
+        "libArchive": false
+    }
+}
